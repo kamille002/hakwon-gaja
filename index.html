@@ -750,7 +750,21 @@
         .hidden {
             display: none !important;
         }
-    </style>
+    
+.ui-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 9999;
+}
+.ui-message.error { background:#ffeded; color:#c00; }
+.ui-message.success { background:#eaffea; color:#0a7; }
+
+</style>
 </head>
 <body>
     <!-- 온보딩 Screen 1: 환영 -->
@@ -1606,6 +1620,20 @@
                 dropdown.classList.remove('active');
             }
         });
-    </script>
+    
+function showMessage(text, type = 'error') {
+    const msgBox = document.getElementById('ui-message');
+    if (!msgBox) return;
+    msgBox.textContent = text;
+    msgBox.className = `ui-message ${type}`;
+    msgBox.style.display = 'block';
+    clearTimeout(msgBox.timer);
+    msgBox.timer = setTimeout(() => {
+        msgBox.style.display = 'none';
+    }, 2000);
+}
+
+</script>
+<div id="ui-message" class="ui-message" style="display:none;"></div>
 </body>
 </html>
