@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="학원가자 - 스마트 학원 관리 앱">
-    <meta name="theme-color" content="#BA68C8">
-    <title>학원가자 - 스마트 학원 관리</title>
+    <meta name="description" content="학원가자 - 스마트 학원 알람">
+    <meta name="theme-color" content="#9C6FDE">
+    
+    <title>학원가자 MVP</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="학원가자">
     
     <style>
         @import url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -21,927 +19,605 @@
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'GmarketSansMedium', -apple-system, sans-serif;
-            background: linear-gradient(135deg, #F3E5F5 0%, #E1BEE7 100%);
+            font-family: 'GmarketSansMedium', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #E8DFF5 0%, #FCE1E4 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            color: #2D3748;
         }
-
-        .container {
+        
+        .app-container {
             max-width: 480px;
             margin: 0 auto;
             background: white;
-            border-radius: 30px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(186, 104, 200, 0.2);
-        }
-
-        /* 온보딩 스크린 */
-        .onboarding-screen {
-            display: none;
             min-height: 100vh;
-            padding: 40px 20px;
-            text-align: center;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1);
         }
-
-        .onboarding-screen.active {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            padding: 25px 20px;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .onboarding-icon {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-        }
-
-        .onboarding-title {
+        
+        .app-title {
             font-size: 28px;
-            color: #BA68C8;
             font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .app-subtitle {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 20px;
+        }
+        
+        /* Child Selector */
+        .child-section {
+            background: white;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .child-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
             margin-bottom: 15px;
         }
-
-        .onboarding-subtitle {
-            font-size: 16px;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
-
-        .onboarding-input {
-            width: 100%;
-            max-width: 300px;
-            padding: 18px;
-            border: 2px solid #E1BEE7;
-            border-radius: 15px;
-            font-size: 18px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .onboarding-input:focus {
-            outline: none;
-            border-color: #BA68C8;
-        }
-
-        .onboarding-btn {
-            padding: 18px 50px;
-            background: linear-gradient(135deg, #BA68C8 0%, #CE93D8 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 18px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            cursor: pointer;
-            margin: 10px;
-        }
-
-        .onboarding-btn-secondary {
-            background: white;
-            color: #BA68C8;
-            border: 2px solid #BA68C8;
-        }
-
-        .child-list-onboarding {
-            max-width: 300px;
-            margin: 20px 0;
-        }
-
-        .child-item-onboarding {
-            background: #F3E5F5;
-            padding: 15px 20px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .child-name-display {
-            font-size: 18px;
-            color: #BA68C8;
-        }
-
-        .remove-child-btn {
-            background: transparent;
-            border: none;
-            color: #999;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* 헤더 */
-        .header {
-            background: linear-gradient(135deg, #BA68C8 0%, #CE93D8 100%);
-            padding: 30px 20px 20px;
-            color: white;
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-        }
-
-        .logo-text {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: -0.5px;
-        }
-
-        .child-selector {
-            position: relative;
-            display: inline-block;
-        }
-
-        .child-selector-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
+        
+        .child-tab {
+            background: #F7FAFC;
+            border: 2px solid #E2E8F0;
             padding: 10px 20px;
             border-radius: 20px;
-            font-size: 16px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .child-dropdown {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            margin-top: 10px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-width: 200px;
-            z-index: 100;
-        }
-
-        .child-dropdown.active {
-            display: block;
-        }
-
-        .child-dropdown-item {
-            padding: 15px 20px;
-            color: #333;
-            cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .child-dropdown-item:first-child {
-            border-radius: 15px 15px 0 0;
-        }
-
-        .child-dropdown-item:last-child {
-            border-bottom: none;
-            border-radius: 0 0 15px 15px;
-        }
-
-        .child-dropdown-item:hover {
-            background: #F3E5F5;
-        }
-
-        .child-dropdown-item.active {
-            background: #BA68C8;
-            color: white;
-        }
-
-        .child-dropdown-item.add-child {
-            color: #BA68C8;
-            font-weight: bold;
-        }
-
-        .user-greeting {
-            font-size: 16px;
-            opacity: 0.95;
-            margin-top: 5px;
-        }
-
-        .tabs {
-            display: flex;
-            background: rgba(255,255,255,0.2);
-            border-radius: 15px;
-            padding: 5px;
-            margin-top: 20px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 12px 8px;
-            border: none;
-            background: transparent;
-            color: white;
-            font-size: 14px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            font-size: 14px;
+            flex-shrink: 0;
         }
-
-        .tab.active {
-            background: white;
-            color: #BA68C8;
+        
+        .child-tab.active {
+            background: #9C6FDE;
+            color: white;
+            border-color: #9C6FDE;
             font-weight: bold;
         }
-
-        .content {
-            padding: 25px 20px;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #F3E5F5 0%, #FCE4EC 100%);
-            padding: 20px 15px;
+        
+        .add-child-btn {
+            background: white;
+            border: 2px dashed #9C6FDE;
+            color: #9C6FDE;
+            padding: 10px 20px;
             border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* Points Display */
+        .points-section {
+            background: linear-gradient(135deg, #FFD93D 0%, #FFAA4C 100%);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(255, 170, 76, 0.3);
             text-align: center;
         }
-
-        .stat-icon {
-            width: 35px;
-            height: 35px;
-            margin: 0 auto 8px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            color: #BA68C8;
+        
+        .points-display {
+            font-size: 48px;
             font-weight: bold;
-            margin-bottom: 4px;
+            color: white;
+            margin-bottom: 5px;
         }
-
-        .stat-label {
-            font-size: 12px;
-            color: #888;
+        
+        .points-label {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
         }
-
+        
+        /* Section */
+        .section {
+            margin-bottom: 30px;
+        }
+        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
-
+        
         .section-title {
-            font-size: 18px;
-            color: #333;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2D3748;
+        }
+        
+        .add-btn {
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
             font-weight: bold;
         }
-
-        .academy-list, .reward-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(156, 111, 222, 0.4);
         }
-
-        .academy-card, .reward-item {
+        
+        /* Academy Card */
+        .academy-card {
             background: white;
-            border: 2px solid #E1BEE7;
-            border-radius: 20px;
-            padding: 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
             transition: all 0.3s;
         }
-
+        
         .academy-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(186, 104, 200, 0.15);
+            border-color: #9C6FDE;
+            box-shadow: 0 4px 12px rgba(156, 111, 222, 0.2);
         }
-
-        .academy-name, .reward-name {
-            font-size: 18px;
-            color: #BA68C8;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .academy-time {
-            font-size: 15px;
-            color: #666;
+        
+        .academy-header {
             display: flex;
-            align-items: center;
-            gap: 5px;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
         }
-
-        .academy-days {
+        
+        .academy-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2D3748;
+        }
+        
+        .academy-time {
+            color: #4A5568;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .days-badges {
             display: flex;
             gap: 5px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
-
+        
         .day-badge {
-            padding: 5px 10px;
-            background: #F3E5F5;
-            color: #BA68C8;
-            border-radius: 8px;
+            background: #E9D8FD;
+            color: #6B46C1;
+            padding: 5px 12px;
+            border-radius: 12px;
             font-size: 12px;
         }
-
-        .day-badge.active {
-            background: #BA68C8;
-            color: white;
-        }
-
-        .weather-badges {
-            display: flex;
-            gap: 5px;
-            margin-top: 8px;
-        }
-
-        .weather-badge {
-            padding: 4px 8px;
-            background: #E3F2FD;
-            color: #1976D2;
-            border-radius: 6px;
-            font-size: 11px;
-        }
-
-        .reward-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .reward-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .reward-icon {
-            width: 40px;
-            height: 40px;
-        }
-
-        .reward-cost {
-            font-size: 13px;
-            color: #BA68C8;
-            font-weight: bold;
-        }
-
-        .reward-status {
-            padding: 6px 12px;
+        
+        .alarm-status {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #C6F6D5;
+            color: #22543D;
             border-radius: 10px;
             font-size: 12px;
-            background: #F3E5F5;
-            color: #BA68C8;
-        }
-
-        .reward-status.available {
-            background: #BA68C8;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn {
-            padding: 15px 25px;
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            justify-content: center;
+            gap: 5px;
         }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #BA68C8 0%, #CE93D8 100%);
+        
+        .delete-btn {
+            background: #FC8181;
+            border: none;
             color: white;
-            width: 100%;
-            font-size: 17px;
-            padding: 18px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(186, 104, 200, 0.3);
-        }
-
-        .btn-secondary {
-            background: #F3E5F5;
-            color: #BA68C8;
-        }
-
-        .points-card {
-            background: linear-gradient(135deg, #BA68C8 0%, #CE93D8 100%);
-            border-radius: 25px;
-            padding: 30px;
-            color: white;
-            text-align: center;
-            margin-bottom: 25px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .points-card::before {
-            content: '✨';
-            position: absolute;
-            font-size: 100px;
-            opacity: 0.1;
-            right: -20px;
-            top: -20px;
-        }
-
-        .points-label {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-bottom: 10px;
-        }
-
-        .points-value {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .points-subtitle {
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
             font-size: 13px;
-            opacity: 0.85;
         }
-
-        .schedule-card {
+        
+        /* Reward Card */
+        .reward-card {
             background: white;
-            border: 2px solid #E1BEE7;
-            border-radius: 20px;
-            padding: 25px;
+            border: 2px solid #E2E8F0;
+            border-radius: 15px;
+            padding: 15px;
             margin-bottom: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .schedule-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(180deg, #BA68C8 0%, #CE93D8 100%);
-        }
-
-        .schedule-time {
-            font-size: 28px;
-            color: #BA68C8;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .schedule-academy {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .schedule-status {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-
-        .time-remaining {
-            font-size: 13px;
-            color: #888;
+        
+        .reward-info {
+            flex: 1;
         }
-
-        .badge {
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 12px;
+        
+        .reward-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 5px;
+        }
+        
+        .reward-cost {
+            color: #FFB020;
+            font-size: 14px;
             font-weight: bold;
         }
-
-        .badge-waiting {
-            background: #FFF3E0;
-            color: #F57C00;
+        
+        .reward-shortage {
+            color: #E53E3E;
+            font-size: 12px;
+            margin-top: 3px;
         }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
+        
+        .claim-btn {
+            background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
         }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        
+        .claim-btn:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
         }
-
+        
+        .delete-reward-btn {
+            background: #FC8181;
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.5);
             z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .modal.active {
-            display: flex;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
-
+        
+        .modal.active {
+            display: flex;
+        }
+        
         .modal-content {
             background: white;
-            border-radius: 25px;
-            padding: 30px;
-            max-width: 450px;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
         }
-
-        .modal-header {
+        
+        .modal-title {
             font-size: 22px;
-            color: #BA68C8;
             font-weight: bold;
-            margin-bottom: 25px;
+            color: #2D3748;
+            margin-bottom: 20px;
             text-align: center;
         }
-
+        
         .form-group {
             margin-bottom: 20px;
         }
-
+        
         .form-label {
             display: block;
             font-size: 14px;
-            color: #666;
+            font-weight: bold;
+            color: #4A5568;
             margin-bottom: 8px;
         }
-
+        
         .form-input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #E1BEE7;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'GmarketSansMedium', sans-serif;
-            transition: border-color 0.3s;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #BA68C8;
-        }
-
-        .days-selector {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .day-option {
-            flex: 1;
-            min-width: 45px;
-            padding: 12px 8px;
-            border: 2px solid #E1BEE7;
-            background: white;
-            color: #BA68C8;
-            border-radius: 12px;
+            padding: 12px;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
             font-size: 14px;
-            cursor: pointer;
-            text-align: center;
             transition: all 0.3s;
         }
-
-        .day-option.selected {
-            background: #BA68C8;
-            color: white;
-            border-color: #BA68C8;
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #9C6FDE;
         }
-
-        .time-input-group {
+        
+        .days-selector {
             display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+        
+        .day-option {
+            padding: 12px;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            user-select: none;
+        }
+        
+        .day-option.selected {
+            background: #9C6FDE;
+            color: white;
+            border-color: #9C6FDE;
+        }
+        
+        .time-inputs {
+            display: flex;
             gap: 10px;
             align-items: center;
         }
-
-        .time-input {
+        
+        .time-inputs input {
+            flex: 1;
             text-align: center;
+            font-size: 16px;
         }
-
-        .time-separator {
-            font-size: 20px;
-            color: #BA68C8;
-        }
-
+        
         .modal-buttons {
             display: flex;
             gap: 10px;
             margin-top: 25px;
         }
-
-        .modal-buttons .btn {
+        
+        .btn {
             flex: 1;
-        }
-
-        .recording-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .recording-status {
-            margin-top: 10px;
-            font-size: 13px;
-            color: #BA68C8;
-            text-align: center;
-        }
-
-        .weather-section {
-            background: #F8F9FA;
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .weather-section-title {
-            font-size: 16px;
-            color: #333;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .weather-option {
-            background: white;
-            border: 2px solid #E1BEE7;
+            padding: 14px;
+            border: none;
             border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 12px;
-        }
-
-        .weather-option-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .weather-checkbox {
-            width: 20px;
-            height: 20px;
+            font-size: 16px;
             cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
         }
-
-        .weather-label {
-            font-size: 15px;
-            color: #333;
-            flex: 1;
+        
+        .btn-secondary {
+            background: #E2E8F0;
+            color: #4A5568;
         }
-
-        .weather-record-section {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #E1BEE7;
-            display: none;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            color: white;
         }
-
-        .weather-record-section.active {
-            display: block;
+        
+        .btn:hover {
+            transform: translateY(-2px);
         }
-
-        .divider {
-            height: 1px;
-            background: #E1BEE7;
-            margin: 20px 0;
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #A0AEC0;
         }
-
+        
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 16px;
+        }
+        
+        /* Check-in Button */
+        .checkin-section {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+        
+        .checkin-btn {
+            background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
+            border: none;
+            color: white;
+            padding: 18px 50px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(72, 187, 120, 0.4);
+            transition: all 0.3s;
+        }
+        
+        .checkin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(72, 187, 120, 0.5);
+        }
+        
+        /* Hidden */
         .hidden {
             display: none !important;
         }
-    
-.ui-message {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    z-index: 9999;
-}
-.ui-message.error { background:#ffeded; color:#c00; }
-.ui-message.success { background:#eaffea; color:#0a7; }
-
-</style>
+        
+        /* Info Box */
+        .info-box {
+            background: #EBF8FF;
+            border: 2px solid #90CDF4;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2C5282;
+        }
+        
+        /* Demo Mode Banner */
+        .demo-banner {
+            background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+        }
+        
+        .demo-icon {
+            font-size: 18px;
+            margin-right: 8px;
+        }
+        
+        /* Start Button */
+        .start-real-section {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .start-real-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #9C6FDE 0%, #B794F6 100%);
+            border: none;
+            color: white;
+            padding: 18px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(156, 111, 222, 0.5);
+            transition: all 0.3s;
+        }
+        
+        .start-real-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(156, 111, 222, 0.6);
+        }
+    </style>
 </head>
 <body>
-    <!-- 온보딩 Screen 1: 환영 -->
-    <div class="onboarding-screen" id="onboarding1">
-        <svg class="onboarding-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <rect x="20" y="30" width="60" height="50" rx="8" fill="#BA68C8"/>
-            <rect x="25" y="35" width="50" height="40" rx="6" fill="#F3E5F5"/>
-            <circle cx="35" cy="45" r="3" fill="#BA68C8"/>
-            <circle cx="65" cy="45" r="3" fill="#BA68C8"/>
-            <path d="M 40 60 Q 50 65 60 60" stroke="#BA68C8" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <path d="M 35 30 Q 50 20 65 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
-        </svg>
-        <div class="onboarding-title">학원가자에<br>오신 걸 환영해요! 🎒</div>
-        <div class="onboarding-subtitle">
-            아이의 학원 출석을 스마트하게 관리하고<br>
-            시간 약속 습관을 길러보세요
+    <div class="app-container">
+        <!-- Demo Mode Banner -->
+        <div class="demo-banner" id="demoBanner">
+            <span class="demo-icon">🎮</span>
+            체험 모드 - 아래 데이터는 데모예요! 마음껏 탐색해보세요!
         </div>
-        <button class="onboarding-btn" onclick="nextOnboarding(2)">시작하기</button>
-    </div>
-
-    <!-- 온보딩 Screen 2: 자녀 등록 -->
-    <div class="onboarding-screen" id="onboarding2">
-        <div class="onboarding-title">자녀 이름을<br>입력해주세요 👦</div>
-        <div class="onboarding-subtitle">
-            학원 일정을 관리할 자녀의 이름을 알려주세요
-        </div>
-        <input type="text" class="onboarding-input" id="childNameInput" placeholder="예) 민준" autofocus>
-        <button class="onboarding-btn" onclick="addChildFromOnboarding()">다음</button>
-    </div>
-
-    <!-- 온보딩 Screen 3: 추가 자녀 -->
-    <div class="onboarding-screen" id="onboarding3">
-        <div class="onboarding-title">✅ 등록 완료!</div>
-        <div class="child-list-onboarding" id="childListOnboarding"></div>
-        <div class="onboarding-subtitle" style="margin-bottom: 20px;">
-            다른 자녀도 등록하시겠어요?
-        </div>
-        <button class="onboarding-btn onboarding-btn-secondary" onclick="addAnotherChild()">+ 자녀 추가하기</button>
-        <button class="onboarding-btn" onclick="finishOnboarding()">시작하기</button>
-    </div>
-
-    <!-- 온보딩 Screen 4: 완료 -->
-    <div class="onboarding-screen" id="onboarding4">
-        <svg class="onboarding-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="40" fill="#BA68C8"/>
-            <path d="M 30 50 L 45 65 L 70 35" stroke="white" stroke-width="8" fill="none" stroke-linecap="round"/>
-        </svg>
-        <div class="onboarding-title">모든 준비가<br>끝났어요! 🎉</div>
-        <div class="onboarding-subtitle">
-            이제 학원을 등록하고<br>
-            스마트한 학원 관리를 시작해보세요!
-        </div>
-        <button class="onboarding-btn" onclick="goToApp()">학원 추가하러 가기</button>
-    </div>
-
-    <!-- 메인 앱 -->
-    <div class="container hidden" id="mainApp">
+        
+        <!-- Header -->
         <div class="header">
-            <div class="logo-container">
-                <svg class="logo-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="20" y="30" width="60" height="50" rx="8" fill="white"/>
-                    <rect x="25" y="35" width="50" height="40" rx="6" fill="#F3E5F5"/>
-                    <circle cx="35" cy="45" r="3" fill="#BA68C8"/>
-                    <circle cx="65" cy="45" r="3" fill="#BA68C8"/>
-                    <path d="M 40 60 Q 50 65 60 60" stroke="#BA68C8" stroke-width="3" fill="none" stroke-linecap="round"/>
-                    <path d="M 35 30 Q 50 20 65 30" stroke="white" stroke-width="4" fill="none" stroke-linecap="round"/>
-                </svg>
-                <div>
-                    <div class="logo-text">학원가자</div>
-                    <div class="child-selector">
-                        <button class="child-selector-btn" onclick="toggleChildDropdown()">
-                            <span id="currentChildName">👦 자녀</span>
-                            <span>▼</span>
-                        </button>
-                        <div class="child-dropdown" id="childDropdown"></div>
-                    </div>
-                </div>
+            <div class="app-title">🎒 학원가자</div>
+            <div class="app-subtitle">MVP - 스마트 학원 알람</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Child Selection -->
+            <div class="child-section">
+                <div class="child-selector" id="childSelector"></div>
             </div>
-
-            <div class="tabs">
-                <button class="tab active" onclick="switchTab('academy')">학원</button>
-                <button class="tab" onclick="switchTab('reward')">보상</button>
-                <button class="tab" onclick="switchTab('child')">아이</button>
+            
+            <!-- Points -->
+            <div class="points-section">
+                <div class="points-display" id="pointsDisplay">0P</div>
+                <div class="points-label">내 포인트</div>
+            </div>
+            
+            <!-- Today's Schedule -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">📚 오늘의 학원</div>
+                    <button class="add-btn" onclick="openAddAcademy()">+ 학원 추가</button>
+                </div>
+                <div id="todayAcademyList"></div>
+            </div>
+            
+            <!-- Rewards -->
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">🎁 보상</div>
+                    <button class="add-btn" onclick="openAddReward()">+ 보상 추가</button>
+                </div>
+                <div id="rewardList"></div>
             </div>
         </div>
-
-        <div class="content">
-            <div id="academyContent" class="tab-content active">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <svg class="stat-icon" viewBox="0 0 100 100">
-                            <rect x="20" y="30" width="60" height="50" rx="8" fill="#BA68C8"/>
-                        </svg>
-                        <div class="stat-value" id="academyCount">0</div>
-                        <div class="stat-label">등록 학원</div>
-                    </div>
-                    <div class="stat-card">
-                        <svg class="stat-icon" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="35" fill="#BA68C8"/>
-                            <path d="M 30 50 L 45 65 L 70 35" stroke="white" stroke-width="6" fill="none"/>
-                        </svg>
-                        <div class="stat-value">95%</div>
-                        <div class="stat-label">출석률</div>
-                    </div>
-                    <div class="stat-card">
-                        <svg class="stat-icon" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="35" fill="#FFC947"/>
-                            <path d="M 50 25 L 57 45 L 78 45 L 61 58 L 68 78 L 50 65 L 32 78 L 39 58 L 22 45 L 43 45 Z" fill="white"/>
-                        </svg>
-                        <div class="stat-value" id="totalPoints">150</div>
-                        <div class="stat-label">포인트</div>
-                    </div>
-                </div>
-
-                <div class="section-header">
-                    <div class="section-title">등록된 학원</div>
-                </div>
-
-                <div class="academy-list" id="academyList"></div>
-
-                <button class="btn btn-primary" style="margin-top: 25px;" onclick="openModal('addAcademyModal')">
-                    ➕ 학원 추가하기
-                </button>
+        
+        <!-- Check-in Button -->
+        <div class="checkin-section" id="checkinSection">
+            <button class="checkin-btn" onclick="checkIn()">✅ 출발했어요!</button>
+        </div>
+        
+        <!-- Start Real Mode Button -->
+        <div class="start-real-section" id="startRealSection">
+            <button class="start-real-btn" onclick="startRealMode()">
+                🚀 내 자녀로 시작하기
+            </button>
+        </div>
+    </div>
+    
+    <!-- Add Child Modal -->
+    <div class="modal" id="addChildModal">
+        <div class="modal-content">
+            <div class="modal-title">자녀 추가</div>
+            <div class="form-group">
+                <label class="form-label">자녀 이름</label>
+                <input type="text" class="form-input" id="childName" placeholder="예) 민수">
             </div>
-
-            <div id="rewardContent" class="tab-content">
-                <div class="section-header">
-                    <div class="section-title">보상 목록</div>
-                </div>
-
-                <div class="reward-list" id="rewardList"></div>
-
-                <button class="btn btn-primary" style="margin-top: 25px;" onclick="openModal('addRewardModal')">
-                    ➕ 보상 추가하기
-                </button>
-            </div>
-
-            <div id="childContent" class="tab-content">
-                <div class="points-card">
-                    <div class="points-label">내가 모은 포인트</div>
-                    <div class="points-value" id="childPoints">150P</div>
-                    <div class="points-subtitle">조금만 더 모으면 보상을 받을 수 있어요!</div>
-                </div>
-
-                <div class="section-header">
-                    <div class="section-title">오늘 학원 일정</div>
-                </div>
-
-                <div id="todaySchedule"></div>
-
-                <div class="section-header" style="margin-top: 30px;">
-                    <div class="section-title">받을 수 있는 보상</div>
-                </div>
-
-                <div class="reward-list" id="childRewardList"></div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal('addChildModal')">취소</button>
+                <button class="btn btn-primary" onclick="addChild()">추가</button>
             </div>
         </div>
     </div>
-
-    <!-- 학원 추가 모달 -->
+    
+    <!-- Add Academy Modal -->
     <div class="modal" id="addAcademyModal">
         <div class="modal-content">
-            <div class="modal-header">새 학원 추가하기</div>
+            <div class="modal-title">학원 추가</div>
             
             <div class="form-group">
                 <label class="form-label">학원 이름</label>
                 <input type="text" class="form-input" id="academyName" placeholder="예) 영어학원">
             </div>
-
-            <div class="form-group">
-                <label class="form-label">학원 주소</label>
-                <input type="text" class="form-input" id="academyAddress" placeholder="주소를 입력하세요">
-            </div>
-
+            
             <div class="form-group">
                 <label class="form-label">수업 요일</label>
-                <div class="days-selector" id="daysSelector">
+                <div class="days-selector">
                     <div class="day-option" data-day="월" onclick="toggleDay(this)">월</div>
                     <div class="day-option" data-day="화" onclick="toggleDay(this)">화</div>
                     <div class="day-option" data-day="수" onclick="toggleDay(this)">수</div>
@@ -951,464 +627,340 @@
                     <div class="day-option" data-day="일" onclick="toggleDay(this)">일</div>
                 </div>
             </div>
-
+            
+            <div class="form-group">
+                <label class="form-label">출발 시간 (알람 시간)</label>
+                <div class="time-inputs">
+                    <input type="number" class="form-input" id="departureHour" min="0" max="23" placeholder="13">
+                    <span style="font-size: 20px; font-weight: bold;">:</span>
+                    <input type="number" class="form-input" id="departureMinute" min="0" max="59" placeholder="00">
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label class="form-label">수업 시작 시간</label>
-                <div class="time-input-group">
-                    <input type="number" class="form-input time-input" id="startHour" placeholder="17" min="0" max="23">
-                    <span class="time-separator">:</span>
-                    <input type="number" class="form-input time-input" id="startMinute" placeholder="00" min="0" max="59">
+                <div class="time-inputs">
+                    <input type="number" class="form-input" id="classHour" min="0" max="23" placeholder="13">
+                    <span style="font-size: 20px; font-weight: bold;">:</span>
+                    <input type="number" class="form-input" id="classMinute" min="0" max="59" placeholder="30">
                 </div>
             </div>
-
-            <div class="divider"></div>
-
-            <div class="form-group">
-                <label class="form-label">알람 소리</label>
-                <select class="form-input" id="alarmType" onchange="toggleVoiceRecording()">
-                    <option value="basic">기본 알람음</option>
-                    <option value="voice">엄마 목소리</option>
-                    <option value="both">기본음 + 엄마 목소리</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="voiceRecordingSection" style="display: none;">
-                <label class="form-label">기본 알람 메시지 녹음 (10초 이내)</label>
-                <div class="recording-buttons">
-                    <button type="button" class="btn btn-secondary" id="recordBtn" onclick="toggleRecording('basic')" style="flex: 1;">
-                        🎤 녹음 시작
-                    </button>
-                    <button type="button" class="btn btn-secondary" id="playBtn" onclick="playRecording('basic')" style="flex: 1;" disabled>
-                        ▶️ 재생
-                    </button>
-                </div>
-                <div id="recordingStatus" class="recording-status"></div>
-            </div>
-
-            <div class="weather-section">
-                <div class="weather-section-title">
-                    🌤️ 날씨 알림 (선택사항)
-                </div>
-
-                <div class="weather-option">
-                    <div class="weather-option-header">
-                        <input type="checkbox" class="weather-checkbox" id="rainAlert" onchange="toggleWeatherRecording('rain')">
-                        <label class="weather-label" for="rainAlert">☔ 비/눈 올 때 알림</label>
-                    </div>
-                    <div class="weather-record-section" id="rainRecordSection">
-                        <div class="recording-buttons">
-                            <button type="button" class="btn btn-secondary" id="rainRecordBtn" onclick="toggleRecording('rain')" style="flex: 1;">
-                                🎤 녹음
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="rainPlayBtn" onclick="playRecording('rain')" style="flex: 1;" disabled>
-                                ▶️ 재생
-                            </button>
-                        </div>
-                        <div id="rainRecordingStatus" class="recording-status"></div>
-                    </div>
-                </div>
-
-                <div class="weather-option">
-                    <div class="weather-option-header">
-                        <input type="checkbox" class="weather-checkbox" id="dustAlert" onchange="toggleWeatherRecording('dust')">
-                        <label class="weather-label" for="dustAlert">😷 미세먼지 나쁠 때 알림</label>
-                    </div>
-                    <div class="weather-record-section" id="dustRecordSection">
-                        <div class="recording-buttons">
-                            <button type="button" class="btn btn-secondary" id="dustRecordBtn" onclick="toggleRecording('dust')" style="flex: 1;">
-                                🎤 녹음
-                            </button>
-                            <button type="button" class="btn btn-secondary" id="dustPlayBtn" onclick="playRecording('dust')" style="flex: 1;" disabled>
-                                ▶️ 재생
-                            </button>
-                        </div>
-                        <div id="dustRecordingStatus" class="recording-status"></div>
-                    </div>
-                </div>
-            </div>
-
+            
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeModal('addAcademyModal')">취소</button>
-                <button class="btn btn-primary" onclick="addAcademy()">추가하기</button>
+                <button class="btn btn-primary" onclick="addAcademy()">추가</button>
             </div>
         </div>
     </div>
-
-    <!-- 보상 추가 모달 -->
+    
+    <!-- Add Reward Modal -->
     <div class="modal" id="addRewardModal">
         <div class="modal-content">
-            <div class="modal-header">새 보상 추가하기</div>
+            <div class="modal-title">보상 추가</div>
             
             <div class="form-group">
                 <label class="form-label">보상 이름</label>
-                <input type="text" class="form-input" id="rewardName" placeholder="예) 피자 먹기">
+                <input type="text" class="form-input" id="rewardName" placeholder="예) 편의점 간식">
             </div>
-
-            <div class="form-group">
-                <label class="form-label">필요한 포인트</label>
-                <input type="number" class="form-input" id="rewardPoints" placeholder="100" min="10">
-            </div>
-
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal('addRewardModal')">취소</button>
-                <button class="btn btn-primary" onclick="addReward()">추가하기</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 자녀 추가 모달 -->
-    <div class="modal" id="addChildModal">
-        <div class="modal-content">
-            <div class="modal-header">자녀 추가하기</div>
             
             <div class="form-group">
-                <label class="form-label">자녀 이름</label>
-                <input type="text" class="form-input" id="newChildName" placeholder="예) 민수">
+                <label class="form-label">필요 포인트</label>
+                <input type="number" class="form-input" id="rewardPoints" placeholder="100" min="10">
             </div>
-
+            
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal('addChildModal')">취소</button>
-                <button class="btn btn-primary" onclick="confirmAddChild()">추가하기</button>
+                <button class="btn btn-secondary" onclick="closeModal('addRewardModal')">취소</button>
+                <button class="btn btn-primary" onclick="addReward()">추가</button>
             </div>
         </div>
     </div>
-
+    
     <script>
+        // App State
         let appData = {
             children: [],
             currentChildId: null,
-            rewards: [
-                { name: '편의점 간식', points: 100, color: '#FF6B9D' },
-                { name: '게임 시간 30분', points: 200, color: '#4FC3F7' }
-            ],
-            onboardingComplete: false
+            academies: [],
+            rewards: [],
+            alarms: [],
+            isDemoMode: false
         };
-
-        let mediaRecorder;
-        let audioChunks = [];
-        let recordedAudios = { basic: null, rain: null, dust: null };
-        let currentRecordingType = null;
-        let onboardingChildren = [];
-
-        // 초기화
+        
+        // Initialize
         window.addEventListener('load', () => {
             loadData();
             
-            if (appData.onboardingComplete && appData.children.length > 0) {
-                showApp();
+            // Check if first visit or demo mode
+            const hasVisited = localStorage.getItem('hakwonHasVisited');
+            
+            if (!hasVisited && appData.children.length === 0) {
+                // First time visitor - load demo mode!
+                loadDemoMode();
+            } else if (appData.children.length === 0) {
+                // Returning visitor with no data
+                openModal('addChildModal');
             } else {
-                showOnboarding(1);
+                // Has data
+                appData.currentChildId = appData.children[0].id;
+                render();
             }
             
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-            });
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+            
+            // Check alarms every minute
+            setInterval(checkAlarms, 60000);
+            checkAlarms();
         });
-
-        // 데이터 관리
-        function saveData() {
-            localStorage.setItem('hakwonAppData', JSON.stringify(appData));
+        
+        // Demo Mode
+        function loadDemoMode() {
+            appData.isDemoMode = true;
+            
+            // Add demo child
+            const demoChild = {
+                id: 'demo_child_1',
+                name: '민수',
+                points: 50
+            };
+            appData.children.push(demoChild);
+            appData.currentChildId = demoChild.id;
+            
+            // Add demo academies
+            const now = new Date();
+            const currentHour = now.getHours();
+            const nextHour = (currentHour + 1) % 24;
+            
+            appData.academies = [
+                {
+                    id: 'demo_academy_1',
+                    childId: 'demo_child_1',
+                    name: '영어학원',
+                    days: ['월', '수', '금'],
+                    departureTime: `${nextHour.toString().padStart(2, '0')}:00`,
+                    classTime: `${nextHour.toString().padStart(2, '0')}:30`
+                },
+                {
+                    id: 'demo_academy_2',
+                    childId: 'demo_child_1',
+                    name: '수학학원',
+                    days: ['화', '목'],
+                    departureTime: '14:00',
+                    classTime: '14:30'
+                }
+            ];
+            
+            // Add demo rewards
+            appData.rewards = [
+                {
+                    id: 'demo_reward_1',
+                    name: '편의점 간식',
+                    points: 100
+                },
+                {
+                    id: 'demo_reward_2',
+                    name: '게임 30분',
+                    points: 200
+                },
+                {
+                    id: 'demo_reward_3',
+                    name: '외식 선택권',
+                    points: 500
+                }
+            ];
+            
+            render();
+            updateDemoUI();
         }
-
+        
+        function updateDemoUI() {
+            // Show demo banner
+            document.getElementById('demoBanner').classList.remove('hidden');
+            
+            // Show start real button
+            document.getElementById('startRealSection').classList.remove('hidden');
+            
+            // Hide checkin button in demo mode
+            document.getElementById('checkinSection').classList.add('hidden');
+        }
+        
+        function startRealMode() {
+            if (!confirm('체험 모드를 종료하고 진짜 데이터로 시작하시겠어요?\n\n데모 데이터는 모두 삭제됩니다.')) {
+                return;
+            }
+            
+            // Clear demo data
+            appData = {
+                children: [],
+                currentChildId: null,
+                academies: [],
+                rewards: [],
+                alarms: [],
+                isDemoMode: false
+            };
+            
+            // Mark as visited
+            localStorage.setItem('hakwonHasVisited', 'true');
+            
+            // Save empty data
+            saveData();
+            
+            // Hide demo UI
+            document.getElementById('demoBanner').classList.add('hidden');
+            document.getElementById('startRealSection').classList.add('hidden');
+            
+            // Show add child modal
+            openModal('addChildModal');
+        }
+        
+        // Data Management
+        function saveData() {
+            localStorage.setItem('hakwonMvpData', JSON.stringify(appData));
+        }
+        
         function loadData() {
-            const saved = localStorage.getItem('hakwonAppData');
+            const saved = localStorage.getItem('hakwonMvpData');
             if (saved) {
                 appData = JSON.parse(saved);
             }
         }
-
+        
+        // Child Management
+        function addChild() {
+            const name = document.getElementById('childName').value.trim();
+            if (!name) {
+                alert('자녀 이름을 입력해주세요!');
+                return;
+            }
+            
+            const child = {
+                id: Date.now().toString(),
+                name: name,
+                points: 0
+            };
+            
+            appData.children.push(child);
+            appData.currentChildId = child.id;
+            
+            // Mark as visited (exiting demo mode)
+            localStorage.setItem('hakwonHasVisited', 'true');
+            appData.isDemoMode = false;
+            
+            // Hide demo UI
+            document.getElementById('demoBanner').classList.add('hidden');
+            document.getElementById('startRealSection').classList.add('hidden');
+            
+            saveData();
+            closeModal('addChildModal');
+            
+            // Clear input
+            document.getElementById('childName').value = '';
+            
+            render();
+        }
+        
+        function switchChild(childId) {
+            appData.currentChildId = childId;
+            render();
+        }
+        
         function getCurrentChild() {
             return appData.children.find(c => c.id === appData.currentChildId);
         }
-
-        // 온보딩
-        function showOnboarding(step) {
-            document.querySelectorAll('.onboarding-screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('onboarding' + step).classList.add('active');
-            
-            if (step === 3) {
-                renderOnboardingChildList();
-            }
-        }
-
-        function nextOnboarding(step) {
-            showOnboarding(step);
-        }
-
-        function addChildFromOnboarding() {
-            const name = document.getElementById('childNameInput').value.trim();
-            if (!name) {
-                alert('이름을 입력해주세요!');
-                return;
-            }
-            
-            onboardingChildren.push({
-                id: Date.now(),
-                name: name,
-                academies: [],
-                points: 150,
-                attendance: 95
-            });
-            
-            document.getElementById('childNameInput').value = '';
-            showOnboarding(3);
-        }
-
-        function renderOnboardingChildList() {
-            const list = document.getElementById('childListOnboarding');
-            list.innerHTML = onboardingChildren.map((child, index) => `
-                <div class="child-item-onboarding">
-                    <span class="child-name-display">👦 ${child.name}</span>
-                    <button class="remove-child-btn" onclick="removeOnboardingChild(${index})">×</button>
-                </div>
-            `).join('');
-        }
-
-        function removeOnboardingChild(index) {
-            onboardingChildren.splice(index, 1);
-            renderOnboardingChildList();
-        }
-
-        function addAnotherChild() {
-            showOnboarding(2);
-        }
-
-        function finishOnboarding() {
-            if (onboardingChildren.length === 0) {
-                alert('최소 1명의 자녀를 등록해주세요!');
-                return;
-            }
-            
-            appData.children = onboardingChildren;
-            appData.currentChildId = appData.children[0].id;
-            appData.onboardingComplete = true;
-            saveData();
-            
-            showOnboarding(4);
-        }
-
-        function goToApp() {
-            showApp();
-        }
-
-        function showApp() {
-            document.querySelectorAll('.onboarding-screen').forEach(s => s.classList.remove('active'));
-            document.getElementById('mainApp').classList.remove('hidden');
-            
-            updateChildSelector();
-            renderAcademies();
-            renderRewards();
-            updateStats();
-            renderChildView();
-        }
-
-        // 자녀 선택
-        function updateChildSelector() {
-            const child = getCurrentChild();
-            if (child) {
-                document.getElementById('currentChildName').textContent = '👦 ' + child.name;
-            }
-            
-            renderChildDropdown();
-        }
-
-        function renderChildDropdown() {
-            const dropdown = document.getElementById('childDropdown');
-            dropdown.innerHTML = appData.children.map(child => `
-                <div class="child-dropdown-item ${child.id === appData.currentChildId ? 'active' : ''}" 
-                     onclick="selectChild(${child.id})">
-                    👦 ${child.name}
-                </div>
-            `).join('') + `
-                <div class="child-dropdown-item add-child" onclick="openAddChildModal()">
-                    + 자녀 추가하기
-                </div>
-            `;
-        }
-
-        function toggleChildDropdown() {
-            document.getElementById('childDropdown').classList.toggle('active');
-        }
-
-        function selectChild(childId) {
-            appData.currentChildId = childId;
-            saveData();
-            
-            updateChildSelector();
-            renderAcademies();
-            updateStats();
-            renderChildView();
-            
-            document.getElementById('childDropdown').classList.remove('active');
-        }
-
-        function openAddChildModal() {
-            document.getElementById('childDropdown').classList.remove('active');
-            openModal('addChildModal');
-        }
-
-        function confirmAddChild() {
-            const name = document.getElementById('newChildName').value.trim();
-            if (!name) {
-                alert('이름을 입력해주세요!');
-                return;
-            }
-            
-            appData.children.push({
-                id: Date.now(),
-                name: name,
-                academies: [],
-                points: 150,
-                attendance: 95
-            });
-            
-            saveData();
-            updateChildSelector();
-            closeModal('addChildModal');
-            
-            document.getElementById('newChildName').value = '';
-        }
-
-        // 학원 관리
-        function renderAcademies() {
-            const child = getCurrentChild();
-            const list = document.getElementById('academyList');
-            
-            if (!child || child.academies.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="20" y="30" width="60" height="50" rx="8" fill="#E1BEE7"/>
-                        </svg>
-                        <p>아직 등록된 학원이 없어요<br>학원을 추가해보세요!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            list.innerHTML = child.academies.map(academy => {
-                let weatherBadges = '';
-                if (academy.weatherAlerts) {
-                    if (academy.weatherAlerts.rain) weatherBadges += '<span class="weather-badge">☔ 비 알림</span>';
-                    if (academy.weatherAlerts.dust) weatherBadges += '<span class="weather-badge">😷 미세먼지 알림</span>';
-                }
-                
-                return `
-                    <div class="academy-card">
-                        <div class="academy-name">${academy.name}</div>
-                        <div class="academy-time">⏰ ${academy.time}</div>
-                        <div class="academy-days">
-                            ${academy.days.map(day => `<span class="day-badge active">${day}</span>`).join('')}
-                        </div>
-                        ${weatherBadges ? `<div class="weather-badges">${weatherBadges}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
+        
+        // Academy Management
         function addAcademy() {
-            const child = getCurrentChild();
-            if (!child) return;
-            
             const name = document.getElementById('academyName').value.trim();
-            const address = document.getElementById('academyAddress').value;
-            const hour = document.getElementById('startHour').value;
-            const minute = document.getElementById('startMinute').value;
-            const selectedDays = Array.from(document.querySelectorAll('.day-option.selected')).map(d => d.getAttribute('data-day'));
+            const departureHour = document.getElementById('departureHour').value;
+            const departureMinute = document.getElementById('departureMinute').value;
+            const classHour = document.getElementById('classHour').value;
+            const classMinute = document.getElementById('classMinute').value;
             
-            if (!name || hour === '' || minute === '' || selectedDays.length === 0) {
-                alert('학원 이름, 시간, 요일은 필수입니다!');
+            const selectedDays = Array.from(document.querySelectorAll('.day-option.selected'))
+                .map(d => d.getAttribute('data-day'));
+            
+            // Debugging
+            console.log('=== 학원 추가 검증 ===');
+            console.log('이름:', name, '→', !name ? '❌' : '✅');
+            console.log('요일:', selectedDays, '→', selectedDays.length === 0 ? '❌' : '✅');
+            console.log('출발 시:', departureHour, '→', departureHour === '' ? '❌' : '✅');
+            console.log('출발 분:', departureMinute, '→', departureMinute === '' ? '❌' : '✅');
+            console.log('수업 시:', classHour, '→', classHour === '' ? '❌' : '✅');
+            console.log('수업 분:', classMinute, '→', classMinute === '' ? '❌' : '✅');
+            
+            if (!name) {
+                alert('학원 이름을 입력해주세요!');
                 return;
             }
             
-            const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+            if (selectedDays.length === 0) {
+                alert('수업 요일을 선택해주세요!');
+                return;
+            }
             
-            const weatherAlerts = {
-                rain: document.getElementById('rainAlert').checked,
-                dust: document.getElementById('dustAlert').checked
+            if (departureHour === '' || departureMinute === '') {
+                alert('출발 시간을 입력해주세요!');
+                return;
+            }
+            
+            if (classHour === '' || classMinute === '') {
+                alert('수업 시작 시간을 입력해주세요!');
+                return;
+            }
+            
+            const academy = {
+                id: Date.now().toString(),
+                childId: appData.currentChildId,
+                name: name,
+                days: selectedDays,
+                departureTime: `${departureHour.padStart(2, '0')}:${departureMinute.padStart(2, '0')}`,
+                classTime: `${classHour.padStart(2, '0')}:${classMinute.padStart(2, '0')}`
             };
             
-            child.academies.push({
-                name,
-                address,
-                time,
-                days: selectedDays,
-                alarmType: document.getElementById('alarmType').value,
-                weatherAlerts
-            });
+            appData.academies.push(academy);
             
             saveData();
-            renderAcademies();
-            updateStats();
-            renderChildView();
             closeModal('addAcademyModal');
             
-            alert('학원이 추가되었습니다! ✅');
+            // Clear form
+            document.querySelectorAll('.day-option').forEach(d => d.classList.remove('selected'));
+            document.getElementById('academyName').value = '';
+            document.getElementById('departureHour').value = '';
+            document.getElementById('departureMinute').value = '';
+            document.getElementById('classHour').value = '';
+            document.getElementById('classMinute').value = '';
+            
+            render();
+            
+            alert(`✅ ${name} 학원이 추가되었어요!\n\n출발 시간: ${academy.departureTime}\n수업 시간: ${academy.classTime}\n\n출발 시간에 알람이 울려요!`);
         }
-
-        // 보상 관리
-        function renderRewards() {
-            const child = getCurrentChild();
-            const list = document.getElementById('rewardList');
-            const childList = document.getElementById('childRewardList');
-            const currentPoints = child ? child.points : 150;
+        
+        function deleteAcademy(academyId) {
+            if (!confirm('이 학원을 삭제하시겠습니까?')) return;
             
-            if (appData.rewards.length === 0) {
-                const emptyHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="25" y="45" width="50" height="35" rx="5" fill="#E1BEE7"/>
-                        </svg>
-                        <p>아직 등록된 보상이 없어요<br>보상을 추가해보세요!</p>
-                    </div>
-                `;
-                list.innerHTML = emptyHTML;
-                childList.innerHTML = emptyHTML;
-                return;
-            }
+            appData.academies = appData.academies.filter(a => a.id !== academyId);
             
-            list.innerHTML = appData.rewards.map((reward, index) => `
-                <div class="reward-item">
-                    <div class="reward-info">
-                        <svg class="reward-icon" viewBox="0 0 100 100">
-                            <rect x="25" y="45" width="50" height="35" rx="5" fill="${reward.color}"/>
-                        </svg>
-                        <div>
-                            <div class="reward-name">${reward.name}</div>
-                            <div class="reward-cost">${reward.points}P</div>
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary" style="padding: 8px 16px; font-size: 14px;" onclick="deleteReward(${index})">삭제</button>
-                </div>
-            `).join('');
-            
-            childList.innerHTML = appData.rewards.map((reward, index) => {
-                const canClaim = currentPoints >= reward.points;
-                const shortage = canClaim ? 0 : reward.points - currentPoints;
-                
-                return `
-                    <div class="reward-item">
-                        <div class="reward-info">
-                            <svg class="reward-icon" viewBox="0 0 100 100">
-                                <rect x="25" y="45" width="50" height="35" rx="5" fill="${reward.color}"/>
-                            </svg>
-                            <div>
-                                <div class="reward-name">${reward.name}</div>
-                                <div class="reward-cost">${reward.points}P 필요</div>
-                            </div>
-                        </div>
-                        <div class="reward-status ${canClaim ? 'available' : ''}" onclick="${canClaim ? `claimReward(${index})` : ''}">
-                            ${canClaim ? '받기' : shortage + 'P 부족'}
-                        </div>
-                    </div>
-                `;
-            }).join('');
+            saveData();
+            render();
         }
-
+        
+        function getTodayAcademies() {
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            const today = days[new Date().getDay()];
+            const currentChild = getCurrentChild();
+            
+            if (!currentChild) return [];
+            
+            return appData.academies.filter(a => 
+                a.childId === currentChild.id && a.days.includes(today)
+            );
+        }
+        
+        // Reward Management
         function addReward() {
-            const name = document.getElementById('rewardName').value;
+            const name = document.getElementById('rewardName').value.trim();
             const points = parseInt(document.getElementById('rewardPoints').value);
             
             if (!name || !points) {
@@ -1416,224 +968,252 @@
                 return;
             }
             
-            const colors = ['#FF6B9D', '#4FC3F7', '#FFC947', '#BA68C8', '#66BB6A'];
-            const color = colors[appData.rewards.length % colors.length];
+            appData.rewards.push({
+                id: Date.now().toString(),
+                name: name,
+                points: points
+            });
             
-            appData.rewards.push({ name, points, color });
             saveData();
-            renderRewards();
             closeModal('addRewardModal');
-        }
-
-        function deleteReward(index) {
-            if (confirm('이 보상을 삭제하시겠습니까?')) {
-                appData.rewards.splice(index, 1);
-                saveData();
-                renderRewards();
-            }
-        }
-
-        function claimReward(index) {
-            alert(`축하합니다! "${appData.rewards[index].name}" 보상을 받았어요! 🎉`);
-        }
-
-        // 통계
-        function updateStats() {
-            const child = getCurrentChild();
-            if (child) {
-                document.getElementById('academyCount').textContent = child.academies.length;
-                document.getElementById('totalPoints').textContent = child.points;
-            }
-        }
-
-        // 자녀 화면
-        function renderChildView() {
-            const child = getCurrentChild();
-            const scheduleDiv = document.getElementById('todaySchedule');
-            const pointsDiv = document.getElementById('childPoints');
             
-            if (child) {
-                pointsDiv.textContent = child.points + 'P';
+            document.getElementById('rewardName').value = '';
+            document.getElementById('rewardPoints').value = '';
+            
+            render();
+        }
+        
+        function claimReward(rewardId) {
+            const child = getCurrentChild();
+            const reward = appData.rewards.find(r => r.id === rewardId);
+            
+            if (!child || !reward) return;
+            
+            if (child.points < reward.points) {
+                alert('포인트가 부족합니다!');
+                return;
+            }
+            
+            if (!confirm(`${reward.name}을(를) 받으시겠습니까?`)) return;
+            
+            child.points -= reward.points;
+            
+            saveData();
+            render();
+            
+            alert(`🎉 ${reward.name}을(를) 받았습니다!\n\n남은 포인트: ${child.points}P`);
+        }
+        
+        function deleteReward(rewardId) {
+            if (!confirm('이 보상을 삭제하시겠습니까?')) return;
+            
+            appData.rewards = appData.rewards.filter(r => r.id !== rewardId);
+            
+            saveData();
+            render();
+        }
+        
+        // Check-in
+        function checkIn() {
+            const child = getCurrentChild();
+            if (!child) return;
+            
+            const todayAcademies = getTodayAcademies();
+            if (todayAcademies.length === 0) {
+                alert('오늘은 학원이 없어요!');
+                return;
+            }
+            
+            // Add points
+            child.points += 10;
+            
+            saveData();
+            render();
+            
+            alert('✅ 출발 확인!\n+10P 받았어요! 🎉');
+        }
+        
+        // Alarms
+        function checkAlarms() {
+            const now = new Date();
+            const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            
+            const todayAcademies = getTodayAcademies();
+            
+            todayAcademies.forEach(academy => {
+                const alarmKey = `alarm_${academy.id}_${currentTime}`;
                 
-                const today = ['일', '월', '화', '수', '목', '금', '토'][new Date().getDay()];
-                const todayAcademies = child.academies.filter(a => a.days.includes(today));
-                
-                if (todayAcademies.length === 0) {
-                    scheduleDiv.innerHTML = `
-                        <div class="empty-state">
-                            <p>🎉 오늘은 학원이 없는 날이에요!</p>
-                        </div>
-                    `;
-                    return;
+                if (academy.departureTime === currentTime) {
+                    // Check if already alerted today
+                    const lastAlert = localStorage.getItem(alarmKey);
+                    const today = new Date().toDateString();
+                    
+                    if (lastAlert !== today) {
+                        showAlarm(academy);
+                        localStorage.setItem(alarmKey, today);
+                    }
                 }
-                
-                scheduleDiv.innerHTML = todayAcademies.map(academy => `
-                    <div class="schedule-card">
-                        <div class="schedule-time">${academy.time}</div>
-                        <div class="schedule-academy">${academy.name}</div>
-                        <div class="schedule-status">
-                            <div class="time-remaining">⏰ 10분 전 알람</div>
-                            <span class="badge badge-waiting">대기중</span>
-                        </div>
-                    </div>
-                `).join('');
+            });
+        }
+        
+        function showAlarm(academy) {
+            // Browser notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('🎒 학원가자!', {
+                    body: `${academy.name} 출발 시간이에요!\n수업 시작: ${academy.classTime}`,
+                    icon: 'icon-192.png',
+                    badge: 'icon-192.png'
+                });
             }
-        }
-
-        // UI 컨트롤
-        function switchTab(tab) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            event.target.classList.add('active');
-
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(tab + 'Content').classList.add('active');
-        }
-
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
             
-            if (modalId === 'addAcademyModal') {
-                document.getElementById('academyName').value = '';
-                document.getElementById('academyAddress').value = '';
-                document.getElementById('startHour').value = '';
-                document.getElementById('startMinute').value = '';
-                document.getElementById('alarmType').value = 'basic';
-                document.querySelectorAll('.day-option').forEach(d => d.classList.remove('selected'));
-                document.getElementById('voiceRecordingSection').style.display = 'none';
-                document.getElementById('rainAlert').checked = false;
-                document.getElementById('dustAlert').checked = false;
-                document.getElementById('rainRecordSection').classList.remove('active');
-                document.getElementById('dustRecordSection').classList.remove('active');
-                recordedAudios = { basic: null, rain: null, dust: null };
-            } else if (modalId === 'addRewardModal') {
-                document.getElementById('rewardName').value = '';
-                document.getElementById('rewardPoints').value = '';
-            }
+            // Alert (fallback)
+            alert(`🔔 알람!\n\n${academy.name} 출발 시간이에요!\n수업 시작: ${academy.classTime}\n\n지금 출발하세요! 🏃`);
         }
-
+        
+        // UI Helpers
         function toggleDay(element) {
             element.classList.toggle('selected');
         }
-
-        function toggleVoiceRecording() {
-            const alarmType = document.getElementById('alarmType').value;
-            const voiceSection = document.getElementById('voiceRecordingSection');
+        
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function openAddAcademy() {
+            if (!getCurrentChild()) {
+                alert('먼저 자녀를 추가해주세요!');
+                openModal('addChildModal');
+                return;
+            }
+            openModal('addAcademyModal');
+        }
+        
+        function openAddReward() {
+            openModal('addRewardModal');
+        }
+        
+        // Render
+        function render() {
+            renderChildSelector();
+            renderPoints();
+            renderTodayAcademies();
+            renderRewards();
+            updateCheckinButton();
+        }
+        
+        function renderChildSelector() {
+            const container = document.getElementById('childSelector');
             
-            if (alarmType === 'voice' || alarmType === 'both') {
-                voiceSection.style.display = 'block';
+            container.innerHTML = appData.children.map(child => `
+                <button class="child-tab ${child.id === appData.currentChildId ? 'active' : ''}" 
+                        onclick="switchChild('${child.id}')">
+                    ${child.name}
+                </button>
+            `).join('') + `
+                <button class="add-child-btn" onclick="openModal('addChildModal')">
+                    + 자녀 추가
+                </button>
+            `;
+        }
+        
+        function renderPoints() {
+            const child = getCurrentChild();
+            document.getElementById('pointsDisplay').textContent = 
+                child ? `${child.points}P` : '0P';
+        }
+        
+        function renderTodayAcademies() {
+            const container = document.getElementById('todayAcademyList');
+            const todayAcademies = getTodayAcademies();
+            
+            if (todayAcademies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <div class="empty-text">오늘은 학원이 없어요!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = todayAcademies.map(academy => `
+                <div class="academy-card">
+                    <div class="academy-header">
+                        <div>
+                            <div class="academy-name">${academy.name}</div>
+                            <div class="academy-time">🏃 출발: ${academy.departureTime}</div>
+                            <div class="academy-time">📖 수업: ${academy.classTime}</div>
+                            <div class="days-badges">
+                                ${academy.days.map(day => `<span class="day-badge">${day}</span>`).join('')}
+                            </div>
+                            <div class="alarm-status">
+                                🔔 알람 설정됨
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteAcademy('${academy.id}')">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderRewards() {
+            const container = document.getElementById('rewardList');
+            const child = getCurrentChild();
+            
+            if (appData.rewards.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎁</div>
+                        <div class="empty-text">아직 보상이 없어요!</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = appData.rewards.map(reward => {
+                const canClaim = child && child.points >= reward.points;
+                const shortage = child ? reward.points - child.points : reward.points;
+                
+                return `
+                    <div class="reward-card">
+                        <div class="reward-info">
+                            <div class="reward-name">${reward.name}</div>
+                            <div class="reward-cost">${reward.points}P 필요</div>
+                            ${!canClaim ? `<div class="reward-shortage">${shortage}P 부족</div>` : ''}
+                        </div>
+                        <div>
+                            <button class="claim-btn" 
+                                    ${!canClaim ? 'disabled' : ''} 
+                                    onclick="claimReward('${reward.id}')">
+                                ${canClaim ? '받기' : '부족'}
+                            </button>
+                            <button class="delete-reward-btn" onclick="deleteReward('${reward.id}')">삭제</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateCheckinButton() {
+            const todayAcademies = getTodayAcademies();
+            const section = document.getElementById('checkinSection');
+            
+            // Don't show checkin button in demo mode
+            if (appData.isDemoMode) {
+                section.classList.add('hidden');
+                return;
+            }
+            
+            if (todayAcademies.length > 0) {
+                section.classList.remove('hidden');
             } else {
-                voiceSection.style.display = 'none';
+                section.classList.add('hidden');
             }
         }
-
-        function toggleWeatherRecording(type) {
-            const checkbox = document.getElementById(type + 'Alert');
-            const section = document.getElementById(type + 'RecordSection');
-            
-            if (checkbox.checked) {
-                section.classList.add('active');
-            } else {
-                section.classList.remove('active');
-                recordedAudios[type] = null;
-                document.getElementById(type + 'PlayBtn').disabled = true;
-                document.getElementById(type + 'RecordingStatus').textContent = '';
-            }
-        }
-
-        async function toggleRecording(type) {
-            currentRecordingType = type;
-            const recordBtn = document.getElementById(type === 'basic' ? 'recordBtn' : type + 'RecordBtn');
-            const status = document.getElementById(type === 'basic' ? 'recordingStatus' : type + 'RecordingStatus');
-            
-            if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-
-                    mediaRecorder.ondataavailable = (event) => {
-                        audioChunks.push(event.data);
-                    };
-
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                        recordedAudios[type] = URL.createObjectURL(audioBlob);
-                        const playBtn = document.getElementById(type === 'basic' ? 'playBtn' : type + 'PlayBtn');
-                        playBtn.disabled = false;
-                        status.textContent = '✅ 녹음 완료!';
-                    };
-
-                    mediaRecorder.start();
-                    recordBtn.textContent = '⏹️ 중지';
-                    status.textContent = '🔴 녹음 중...';
-
-                    setTimeout(() => {
-                        if (mediaRecorder && mediaRecorder.state === 'recording') {
-                            mediaRecorder.stop();
-                            mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                            recordBtn.textContent = '🎤 ' + (type === 'basic' ? '녹음 시작' : '녹음');
-                        }
-                    }, 10000);
-
-                } catch (error) {
-                    alert('마이크 권한이 필요합니다!');
-                }
-            } else {
-                mediaRecorder.stop();
-                mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                recordBtn.textContent = '🎤 ' + (type === 'basic' ? '녹음 시작' : '녹음');
-            }
-        }
-
-        function playRecording(type) {
-            if (recordedAudios[type]) {
-                const audio = new Audio(recordedAudios[type]);
-                audio.play();
-                const status = document.getElementById(type === 'basic' ? 'recordingStatus' : type + 'RecordingStatus');
-                status.textContent = '▶️ 재생 중...';
-                audio.onended = () => {
-                    status.textContent = '✅ 녹음 완료!';
-                };
-            }
-        }
-
-        // 모달 외부 클릭
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    const modalId = this.getAttribute('id');
-                    closeModal(modalId);
-                }
-            });
-        });
-
-        // 드롭다운 외부 클릭
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('childDropdown');
-            const btn = document.querySelector('.child-selector-btn');
-            
-            if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-    
-function showMessage(text, type = 'error') {
-    const msgBox = document.getElementById('ui-message');
-    if (!msgBox) return;
-    msgBox.textContent = text;
-    msgBox.className = `ui-message ${type}`;
-    msgBox.style.display = 'block';
-    clearTimeout(msgBox.timer);
-    msgBox.timer = setTimeout(() => {
-        msgBox.style.display = 'none';
-    }, 2000);
-}
-
-</script>
-<div id="ui-message" class="ui-message" style="display:none;"></div>
+    </script>
 </body>
 </html>
